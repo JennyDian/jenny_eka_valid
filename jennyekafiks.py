@@ -201,7 +201,7 @@ with st.form("form_pemesanan", clear_on_submit=True):
         "Tanggal Lahir",
         min_value=date(1900, 1, 1),
         max_value=date(2008, 12, 31),
-        value=date(YYYY/MM/DD),
+        value=date(0000, 00, 0),
         format="YYYY/MM/DD"
     ) 
 
