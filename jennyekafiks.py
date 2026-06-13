@@ -178,7 +178,6 @@ CAT 3 : Rp 2.000.000
 # =====================================
 # INITIALIZE STATE UNTUK HARGA TAMPILAN
 # =====================================
-# Tambahkan ini sebelum bagian form agar aplikasi mengingat status reset
 if "harga_tampil" not in st.session_state:
     st.session_state.harga_tampil = 0
 if "total_tampil" not in st.session_state:
@@ -197,24 +196,28 @@ with st.form("form_pemesanan", clear_on_submit=True):
     email = st.text_input("Email")
     no_telp = st.text_input("No. Telepon")
 
+    # PERBAIKAN 1: Format tampilan tanggal lahir (YYYY/MM/DD)
     tanggal_lahir = st.date_input(
         "Tanggal Lahir",
         min_value=date(1900, 1, 1),
         max_value=date(2008, 12, 31),
-        value=date(2000, 1, 1)
+        value=date(2000, 1, 1),
+        format="YYYY/MM/DD" # Mengatur format tampilan pengisian awal
     ) 
 
+    # PERBAIKAN 2: Menambahkan pilihan awal "None" pada kategori tiket
     kategori = st.selectbox(
         "Pilih Kategori Tiket",
-        ["VIP", "CAT 1", "CAT 2", "CAT 3"]
+        ["None", "VIP", "CAT 1", "CAT 2", "CAT 3"]
     )
 
+    # PERBAIKAN 3: Nilai awal jumlah tiket langsung diset maksimal (4)
     jumlah = st.number_input(
         "Jumlah Tiket",
         min_value=1,
         max_value=4,
         step=1,
-        value=1
+        value=4 # Nilai awal diisi maksimal 4 tiket
     )
 
     metode_pembayaran = st.selectbox(
@@ -228,19 +231,20 @@ with st.form("form_pemesanan", clear_on_submit=True):
         ]
     )
 
-    # Menghitung nilai asli yang sedang dipilih di form secara realtime
-    harga_asli = harga_tiket[kategori]
-    total_asli = harga_asli * jumlah
-
-    # Logika Tampilan: Jika kolom nama diisi, ikuti harga asli. Jika nama kosong, paksa jadi 0.
-    if not nama:
+    # Logika Tampilan Harga & Perhitungan Asli
+    # Jika kategori masih "None" atau nama belum diisi, harga diset ke 0
+    if kategori == "None" or not nama:
+        harga_asli = 0
+        total_asli = 0
         st.session_state.harga_tampil = 0
         st.session_state.total_tampil = 0
     else:
+        harga_asli = harga_tiket[kategori]
+        total_asli = harga_asli * jumlah
         st.session_state.harga_tampil = harga_asli
         st.session_state.total_tampil = total_asli
 
-    # Menampilkan nilai dari session state
+    # Menampilkan nilai harga
     st.write(f"### Harga Tiket : Rp {st.session_state.harga_tampil:,}")
     st.write(f"### Total Harga : Rp {st.session_state.total_tampil:,}")
 
@@ -257,10 +261,12 @@ if submit:
         st.warning("Masukkan email!")
     elif not no_telp:
         st.warning("Masukkan nomor telepon!")
+    elif kategori == "None":
+        st.warning("Silakan pilih kategori tiket yang valid!")
     elif metode_pembayaran == "Pilih Metode Pembayaran":
         st.warning("Silakan pilih metode pembayaran!")
     else:
-        # Menambahkan data menggunakan nilai kalkulasi asli sebelum form dikosongkan
+        # Menambahkan data menggunakan nilai kalkulasi asli
         st.session_state.tiket.tambah(
             nama,
             alamat,
@@ -274,7 +280,7 @@ if submit:
             metode_pembayaran
         )
 
-        # SELESAI SUBMIT: Paksa nilai tampilan di state langsung kembali ke angka 0
+        # Reset nilai tampilan state kembali ke 0 setelah sukses
         st.session_state.harga_tampil = 0
         st.session_state.total_tampil = 0
 
@@ -282,7 +288,6 @@ if submit:
         st.success("💳 Pembayaran berhasil")
         st.balloons()
         
-        # Memicu rerun agar Streamlit langsung membersihkan layar dan merender angka 0 tersebut
         st.rerun()
 # =====================================
 # DAFTAR PEMESAN
