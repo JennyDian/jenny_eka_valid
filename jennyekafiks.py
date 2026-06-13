@@ -208,6 +208,7 @@ with st.form("form_pemesanan", clear_on_submit=True):
 
     tanggal_lahir = st.date_input(
         "Tanggal Lahir",
+        ["Tanggal Lahir"]
         min_value=date(1900, 1, 1),
         max_value=date(2008, 12, 31),
         value=date(2000, 1, 1),
@@ -216,7 +217,7 @@ with st.form("form_pemesanan", clear_on_submit=True):
 
     kategori = st.selectbox(
         "Pilih Kategori Tiket",
-        ["None", "VIP", "CAT 1", "CAT 2", "CAT 3"]
+        ["Pilih Kategori Tiket", "VIP", "CAT 1", "CAT 2", "CAT 3"]
     )
 
     # PERBAIKAN: min_value diset ke 0, value awal diset ke 0
