@@ -240,9 +240,8 @@ with st.form("form_pemesanan", clear_on_submit=True):
     min_value=1,
     max_value=4,
     step=1,
-    value=None,
-    placeholder="Maksimal 4 tiket"
-    )
+    value=1
+)
 
     metode_pembayaran = st.selectbox(
     "Metode Pembayaran",
@@ -259,7 +258,6 @@ with st.form("form_pemesanan", clear_on_submit=True):
     if jumlah is not None:
         harga = harga_tiket[kategori]
         total = harga * jumlah
-
         st.write(f"### Harga Tiket : Rp {harga:,}")
         st.write(f"### Total Harga : Rp {total:,}")
 
@@ -268,14 +266,22 @@ with st.form("form_pemesanan", clear_on_submit=True):
 
 if submit:
 
-    if nama == "" or jumlah is None:
-        st.warning("Masukkan data terlebih dahulu!")
+if not nama:
+    st.warning("Masukkan nama terlebih dahulu!")
 
-    elif metode_pembayaran == "Pilih Metode Pembayaran":
-        st.warning("Silakan pilih metode pembayaran!")
+elif not alamat:
+    st.warning("Masukkan alamat!")
+
+elif not email:
+    st.warning("Masukkan email!")
+
+elif not no_telp:
+    st.warning("Masukkan nomor telepon!")
+
+elif metode_pembayaran == "Pilih Metode Pembayaran":
+    st.warning("Silakan pilih metode pembayaran!")
 
 else:
-
     harga = harga_tiket[kategori]
     total = harga * jumlah
 
