@@ -1,5 +1,6 @@
 import streamlit as st
 from datetime import date
+
 # =====================================
 # NODE
 # =====================================
@@ -55,7 +56,6 @@ class LinkedList:
         total,
         pembayaran
     ):
-
         node_baru = Node(
             nama,
             alamat,
@@ -70,92 +70,65 @@ class LinkedList:
         )
         if self.head is None:
             self.head = node_baru
-
         else:
             current = self.head
-
             while current.next:
                 current = current.next
-
             current.next = node_baru
 
     # Tampilkan Data
     def tampilkan(self):
-
         data = []
-
         current = self.head
-
         while current:
-
-          data.append({
-              "Nama": current.nama,
-              "Alamat": current.alamat,
-              "Email": current.email,
-              "No Telepon": current.no_telp,
-              "Tanggal Lahir": current.tanggal_lahir,
-              "Kategori": current.kategori,
-              "Harga Tiket": f"Rp {current.harga:,}",
-              "Jumlah Tiket": current.jumlah,
-              "Total Harga": f"Rp {current.total:,}",
-              "Metode Pembayaran": current.pembayaran,
-              "Status Cetak": current.status_cetak
-          })
-      
-          current = current.next
-
+            data.append({
+                "Nama": current.nama,
+                "Alamat": current.alamat,
+                "Email": current.email,
+                "No Telepon": current.no_telp,
+                "Tanggal Lahir": str(current.tanggal_lahir), # Diubah ke string agar rapi di tabel
+                "Kategori": current.kategori,
+                "Harga Tiket": f"Rp {current.harga:,}",
+                "Jumlah Tiket": current.jumlah,
+                "Total Harga": f"Rp {current.total:,}",
+                "Metode Pembayaran": current.pembayaran,
+                "Status Cetak": current.status_cetak
+            })
+            current = current.next
         return data
 
     # Cari Data
     def cari(self, nama):
-
         current = self.head
-
         while current:
-
             if current.nama.lower() == nama.lower():
                 return current
-
             current = current.next
-
         return None
 
     # Hapus Data
     def hapus(self, nama):
-
         current = self.head
         prev = None
-
         while current:
-
             if current.nama.lower() == nama.lower():
-
                 if prev is None:
                     self.head = current.next
-
                 else:
                     prev.next = current.next
-
                 return True
-
             prev = current
             current = current.next
-
         return False
 
     # Cetak Tiket
     def cetak_tiket(self, nama):
-
         current = self.head
-
         while current:
-
             if current.nama.lower() == nama.lower():
                 current.status_cetak = "Sudah Dicetak"
                 return current
-
             current = current.next
-
         return None
 
 
@@ -184,10 +157,7 @@ harga_tiket = {
 # =====================================
 
 st.title("🎤 Tiket Konser Justin Bieber")
-
-st.write(
-    "Sistem Pemesanan Tiket Konser Justin Bieber Menggunakan Linked List"
-)
+st.write("Sistem Pemesanan Tiket Konser Justin Bieber Menggunakan Linked List")
 
 
 # =====================================
@@ -195,14 +165,10 @@ st.write(
 # =====================================
 
 st.subheader("🎫 Daftar Harga Tiket")
-
 st.info("""
 VIP    : Rp 8.000.000
-
 CAT 1  : Rp 4.500.000
-
 CAT 2  : Rp 3.000.000
-
 CAT 3  : Rp 2.000.000
 """)
 
@@ -214,21 +180,17 @@ CAT 3  : Rp 2.000.000
 st.subheader("📝 Form Pemesanan Tiket")
 
 with st.form("form_pemesanan", clear_on_submit=True):
-
     nama = st.text_input("Nama Pemesan")
     alamat = st.text_area("Alamat")
     email = st.text_input("Email")
     no_telp = st.text_input("No. Telepon")
 
-
-
     tanggal_lahir = st.date_input(
-    "Tanggal Lahir",
-    min_value=date(1900, 1, 1),
-    max_value=date(2008, 12, 31),
-    value=date(2000, 1, 1)
-) 
-    
+        "Tanggal Lahir",
+        min_value=date(1900, 1, 1),
+        max_value=date(2008, 12, 31),
+        value=date(2000, 1, 1)
+    ) 
 
     kategori = st.selectbox(
         "Pilih Kategori Tiket",
@@ -236,94 +198,74 @@ with st.form("form_pemesanan", clear_on_submit=True):
     )
 
     jumlah = st.number_input(
-    "Jumlah Tiket",
-    min_value=1,
-    max_value=4,
-    step=1,
-    value=1
-)
+        "Jumlah Tiket",
+        min_value=1,
+        max_value=4,
+        step=1,
+        value=1
+    )
 
     metode_pembayaran = st.selectbox(
-    "Metode Pembayaran",
-    [
-        "Pilih Metode Pembayaran",
-        "Debit",
-        "QRIS",
-        "GoPay",
-        "DANA"
-    ]
-)
-    
+        "Metode Pembayaran",
+        [
+            "Pilih Metode Pembayaran",
+            "Debit",
+            "QRIS",
+            "GoPay",
+            "DANA"
+        ]
+    )
 
-    if jumlah is not None:
-        harga = harga_tiket[kategori]
-        total = harga * jumlah
-        st.write(f"### Harga Tiket : Rp {harga:,}")
-        st.write(f"### Total Harga : Rp {total:,}")
+    # Menampilkan kalkulasi harga secara realtime di dalam Form
+    harga = harga_tiket[kategori]
+    total = harga * jumlah
+    st.write(f"### Harga Tiket : Rp {harga:,}")
+    st.write(f"### Total Harga : Rp {total:,}")
 
     submit = st.form_submit_button("Tambah Pemesan")
 
 
+# --- LOGIKA VALIDASI SEKARANG BERADA DI SINI (SETELAH TOMBOL DIKLIK) ---
 if submit:
+    if not nama.strip():
+        st.warning("Masukkan nama!")
+    elif not alamat.strip():
+        st.warning("Masukkan alamat!")
+    elif not email.strip():
+        st.warning("Masukkan email!")
+    elif not no_telp.strip():
+        st.warning("Masukkan nomor telepon!")
+    elif metode_pembayaran == "Pilih Metode Pembayaran":
+        st.warning("Silakan pilih metode pembayaran!")
+    else:
+        # Masukkan ke Linked List jika semua validasi lolos
+        st.session_state.tiket.tambah(
+            nama,
+            alamat,
+            email,
+            no_telp,
+            tanggal_lahir,
+            kategori,
+            harga,
+            jumlah,
+            total,
+            metode_pembayaran
+        )
+        st.success("✅ Pesanan berhasil ditambahkan")
+        st.success("💳 Pembayaran berhasil")
+        st.balloons()
+        st.rerun() # Refresh halaman agar tabel data langsung terupdate
 
-if not nama:
-    st.warning("Masukkan nama terlebih dahulu!")
 
-elif not alamat:
-    st.warning("Masukkan alamat!")
-
-elif not email:
-    st.warning("Masukkan email!")
-
-elif not no_telp:
-    st.warning("Masukkan nomor telepon!")
-
-elif metode_pembayaran == "Pilih Metode Pembayaran":
-    st.warning("Silakan pilih metode pembayaran!")
-
-else:
-    harga = harga_tiket[kategori]
-    total = harga * jumlah
-
-    st.session_state.tiket.tambah(
-        nama,
-        alamat,
-        email,
-        no_telp,
-        tanggal_lahir,
-        kategori,
-        harga,
-        jumlah,
-        total,
-        metode_pembayaran
-    )
-
-    st.success("✅ Pesanan berhasil ditambahkan")
-    st.success("💳 Pembayaran berhasil")
-
-    st.info(f"""
-Nama Pemesan : {nama}
-
-Kategori Tiket : {kategori}
-
-Jumlah Tiket : {jumlah}
-
-Total Pembayaran : Rp {total:,}
-
-Metode Pembayaran : {metode_pembayaran}
-""")
-
-    st.balloons()
+# =====================================
 # DAFTAR PEMESAN
 # =====================================
 
 st.subheader("📋 Daftar Pemesan")
-
 data = st.session_state.tiket.tampilkan()
 
 if data:
     st.table(data)
-
 else:
     st.info("Belum ada data pemesan.")
 
@@ -333,21 +275,12 @@ else:
 # =====================================
 
 st.subheader("🔍 Cari Pemesan")
-
-nama_cari = st.text_input(
-    "Masukkan nama pemesan yang dicari"
-)
+nama_cari = st.text_input("Masukkan nama pemesan yang dicari")
 
 if st.button("Cari Pemesan"):
-
-    hasil = st.session_state.tiket.cari(
-        nama_cari
-    )
-
+    hasil = st.session_state.tiket.cari(nama_cari)
     if hasil:
-
         st.success("✅ Data ditemukan")
-
         st.write(f"Nama : {hasil.nama}")
         st.write(f"Alamat : {hasil.alamat}")
         st.write(f"Email : {hasil.email}")
@@ -359,7 +292,6 @@ if st.button("Cari Pemesan"):
         st.write(f"Total Harga : Rp {hasil.total:,}")
         st.write(f"Metode Pembayaran : {hasil.pembayaran}")
         st.write(f"Status Cetak : {hasil.status_cetak}")
-
     else:
         st.error("❌ Data tidak ditemukan")
 
@@ -369,27 +301,14 @@ if st.button("Cari Pemesan"):
 # =====================================
 
 st.subheader("🗑 Hapus Pemesan")
-
-nama_hapus = st.text_input(
-    "Masukkan nama pemesan yang akan dihapus"
-)
+nama_hapus = st.text_input("Masukkan nama pemesan yang akan dihapus")
 
 if st.button("Hapus Pemesan"):
-
-    berhasil = st.session_state.tiket.hapus(
-        nama_hapus
-    )
-
+    berhasil = st.session_state.tiket.hapus(nama_hapus)
     if berhasil:
-
-        st.success(
-            f"✅ Data {nama_hapus} berhasil dihapus"
-        )
-
+        st.success(f"✅ Data {nama_hapus} berhasil dihapus")
         st.rerun()
-
     else:
-
         st.error("❌ Data tidak ditemukan")
 
 
@@ -398,21 +317,12 @@ if st.button("Hapus Pemesan"):
 # =====================================
 
 st.subheader("🎫 Cetak Tiket")
-
-nama_cetak = st.text_input(
-    "Masukkan nama pemesan yang akan dicetak"
-)
+nama_cetak = st.text_input("Masukkan nama pemesan yang akan dicetak")
 
 if st.button("Cetak Tiket"):
-
-    hasil = st.session_state.tiket.cetak_tiket(
-        nama_cetak
-    )
-
+    hasil = st.session_state.tiket.cetak_tiket(nama_cetak)
     if hasil:
-
         st.success("✅ Tiket berhasil dicetak")
-
         st.write("## 🎟 TIKET KONSER JUSTIN BIEBER")
         st.write(f"Nama : {hasil.nama}")
         st.write(f"Alamat : {hasil.alamat}")
@@ -423,9 +333,6 @@ if st.button("Cetak Tiket"):
         st.write(f"Jumlah Tiket : {hasil.jumlah}")
         st.write(f"Metode Pembayaran : {hasil.pembayaran}")
         st.write(f"Total Harga : Rp {hasil.total:,}")
-
         st.success("🎉 Selamat Menikmati Konser Justin Bieber 🎉")
-
     else:
-
         st.error("❌ Data tidak ditemukan")
