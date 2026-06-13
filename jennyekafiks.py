@@ -5,7 +5,6 @@ from datetime import date
 # =====================================
 
 class Node:
-   class Node:
     def __init__(
         self,
         nama,
@@ -90,20 +89,20 @@ class LinkedList:
         while current:
 
           data.append({
-                "Nama": current.nama,
-                "Alamat": current.alamat,
-                "Email": current.email,
-                "No Telepon": current.no_telp,
-                "Tanggal Lahir": current.tanggal_lahir,
-                "Kategori": current.kategori,
-                "Harga Tiket": f"Rp {current.harga:,}",
-                "Jumlah Tiket": current.jumlah,
-                "Total Harga": f"Rp {current.total:,}",
-                "Metode Pembayaran": current.pembayaran,
-                "Status Cetak": current.status_cetak
-            })
-
-            current = current.next
+              "Nama": current.nama,
+              "Alamat": current.alamat,
+              "Email": current.email,
+              "No Telepon": current.no_telp,
+              "Tanggal Lahir": current.tanggal_lahir,
+              "Kategori": current.kategori,
+              "Harga Tiket": f"Rp {current.harga:,}",
+              "Jumlah Tiket": current.jumlah,
+              "Total Harga": f"Rp {current.total:,}",
+              "Metode Pembayaran": current.pembayaran,
+              "Status Cetak": current.status_cetak
+          })
+      
+          current = current.next
 
         return data
 
