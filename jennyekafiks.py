@@ -103,7 +103,7 @@ class LinkedList:
                 "Status Cetak": current.status_cetak
             })
 
-            current = current.next
+         current = current.next
 
         return data
 
