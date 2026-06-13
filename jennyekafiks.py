@@ -166,14 +166,22 @@ st.write(
 # DAFTAR HARGA
 # =====================================
 
+# =====================================
+# DAFTAR HARGA
+# =====================================
+
 st.subheader("🎫 Daftar Harga Tiket")
+
 st.info("""
-VIP    : Rp 8.000.000
-CAT 1  : Rp 4.500.000
-CAT 2  : Rp 3.000.000
-CAT 3  : Rp 2.000.000
+VIP : Rp 8.000.000  
+CAT 1 : Rp 4.500.000  
+CAT 2 : Rp 3.000.000  
+CAT 3 : Rp 2.000.000
 """)
 
+# =====================================
+# FORM PEMESANAN
+# =====================================
 
 # =====================================
 # FORM PEMESANAN
@@ -218,16 +226,19 @@ with st.form("form_pemesanan", clear_on_submit=True):
         ]
     )
 
-    if jumlah is not None:
-        harga = harga_tiket[kategori]
-        total = harga * jumlah
-        st.write(f"### Harga Tiket : Rp {harga:,}")
-        st.write(f"### Total Harga : Rp {total:,}")
+    # --- PERBAIKAN DI SINI ---
+    if not nama:
+        harga_tampil = 0
+        total_tampil = 0
+    else:
+        harga_tampil = harga_tiket[kategori]
+        total_tampil = harga_tampil * jumlah
 
-    submit = st.form_submit_button("Tambah Pemesan")
+    st.write(f"### Harga Tiket : Rp {harga_tampil:,}")
+    st.write(f"### Total Harga : Rp {total_tampil:,}")
+    # -------------------------
 
-
-# --- PERBAIKAN: Logika diletakkan di bawah ini agar berjalan HANYA saat tombol diklik ---
+    submit = st.form_submit_button("Tambah Pemesan")# --- PERBAIKAN: Logika diletakkan di bawah ini agar berjalan HANYA saat tombol diklik ---
 if submit:
     if not nama:
         st.warning("Masukkan nama!")
