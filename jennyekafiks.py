@@ -5,9 +5,13 @@ from datetime import date
 # =====================================
 
 class Node:
+   class Node:
     def __init__(
         self,
         nama,
+        alamat,
+        email,
+        no_telp,
         tanggal_lahir,
         kategori,
         harga,
@@ -17,6 +21,9 @@ class Node:
         status_cetak="Belum Dicetak"
     ):
         self.nama = nama
+        self.alamat = alamat
+        self.email = email
+        self.no_telp = no_telp
         self.tanggal_lahir = tanggal_lahir
         self.kategori = kategori
         self.harga = harga
@@ -39,6 +46,9 @@ class LinkedList:
     def tambah(
         self,
         nama,
+        alamat,
+        email,
+        no_telp,
         tanggal_lahir,
         kategori,
         harga,
@@ -49,6 +59,9 @@ class LinkedList:
 
         node_baru = Node(
             nama,
+            alamat,
+            email,
+            no_telp,
             tanggal_lahir,
             kategori,
             harga,
@@ -56,7 +69,6 @@ class LinkedList:
             total,
             pembayaran
         )
-
         if self.head is None:
             self.head = node_baru
 
@@ -77,8 +89,11 @@ class LinkedList:
 
         while current:
 
-            data.append({
+          data.append({
                 "Nama": current.nama,
+                "Alamat": current.alamat,
+                "Email": current.email,
+                "No Telepon": current.no_telp,
                 "Tanggal Lahir": current.tanggal_lahir,
                 "Kategori": current.kategori,
                 "Harga Tiket": f"Rp {current.harga:,}",
@@ -202,6 +217,9 @@ st.subheader("📝 Form Pemesanan Tiket")
 with st.form("form_pemesanan", clear_on_submit=True):
 
     nama = st.text_input("Nama Pemesan")
+    alamat = st.text_area("Alamat")
+    email = st.text_input("Email")
+    no_telp = st.text_input("No. Telepon")
 
 
 
@@ -262,8 +280,11 @@ if submit:
         harga = harga_tiket[kategori]
         total = harga * jumlah
 
-        st.session_state.tiket.tambah(
+      st.session_state.tiket.tambah(
             nama,
+            alamat,
+            email,
+            no_telp,
             tanggal_lahir,
             kategori,
             harga,
@@ -271,7 +292,6 @@ if submit:
             total,
             metode_pembayaran
         )
-
         st.success("✅ Pesanan berhasil ditambahkan")
         st.success("💳 Pembayaran berhasil")
 
@@ -323,6 +343,9 @@ if st.button("Cari Pemesan"):
         st.success("✅ Data ditemukan")
 
         st.write(f"Nama : {hasil.nama}")
+        st.write(f"Alamat : {hasil.alamat}")
+        st.write(f"Email : {hasil.email}")
+        st.write(f"No Telepon : {hasil.no_telp}")
         st.write(f"Tanggal Lahir : {hasil.tanggal_lahir}")
         st.write(f"Kategori : {hasil.kategori}")
         st.write(f"Harga Tiket : Rp {hasil.harga:,}")
@@ -386,6 +409,9 @@ if st.button("Cetak Tiket"):
 
         st.write("## 🎟 TIKET KONSER JUSTIN BIEBER")
         st.write(f"Nama : {hasil.nama}")
+        st.write(f"Alamat : {hasil.alamat}")
+        st.write(f"Email : {hasil.email}")
+        st.write(f"No Telepon : {hasil.no_telp}")
         st.write(f"Tanggal Lahir : {hasil.tanggal_lahir}")
         st.write(f"Kategori Tiket : {hasil.kategori}")
         st.write(f"Jumlah Tiket : {hasil.jumlah}")
