@@ -86,7 +86,7 @@ class LinkedList:
                 "Alamat": current.alamat,
                 "Email": current.email,
                 "No Telepon": current.no_telp,
-                "Tanggal Lahir": str(current.tanggal_lahir), # Diubah ke string agar rapi di tabel
+                "Tanggal Lahir": current.tanggal_lahir,
                 "Kategori": current.kategori,
                 "Harga Tiket": f"Rp {current.harga:,}",
                 "Jumlah Tiket": current.jumlah,
@@ -157,7 +157,9 @@ harga_tiket = {
 # =====================================
 
 st.title("🎤 Tiket Konser Justin Bieber")
-st.write("Sistem Pemesanan Tiket Konser Justin Bieber Menggunakan Linked List")
+st.write(
+    "Sistem Pemesanan Tiket Konser Justin Bieber Menggunakan Linked List"
+)
 
 
 # =====================================
@@ -216,29 +218,31 @@ with st.form("form_pemesanan", clear_on_submit=True):
         ]
     )
 
-    # Menampilkan kalkulasi harga secara realtime di dalam Form
-    harga = harga_tiket[kategori]
-    total = harga * jumlah
-    st.write(f"### Harga Tiket : Rp {harga:,}")
-    st.write(f"### Total Harga : Rp {total:,}")
+    if jumlah is not None:
+        harga = harga_tiket[kategori]
+        total = harga * jumlah
+        st.write(f"### Harga Tiket : Rp {harga:,}")
+        st.write(f"### Total Harga : Rp {total:,}")
 
     submit = st.form_submit_button("Tambah Pemesan")
 
 
-# --- LOGIKA VALIDASI SEKARANG BERADA DI SINI (SETELAH TOMBOL DIKLIK) ---
+# --- PERBAIKAN: Logika diletakkan di bawah ini agar berjalan HANYA saat tombol diklik ---
 if submit:
-    if not nama.strip():
+    if not nama:
         st.warning("Masukkan nama!")
-    elif not alamat.strip():
+    elif not alamat:
         st.warning("Masukkan alamat!")
-    elif not email.strip():
+    elif not email:
         st.warning("Masukkan email!")
-    elif not no_telp.strip():
+    elif not no_telp:
         st.warning("Masukkan nomor telepon!")
     elif metode_pembayaran == "Pilih Metode Pembayaran":
         st.warning("Silakan pilih metode pembayaran!")
     else:
-        # Masukkan ke Linked List jika semua validasi lolos
+        harga = harga_tiket[kategori]
+        total = harga * jumlah
+
         st.session_state.tiket.tambah(
             nama,
             alamat,
@@ -251,10 +255,10 @@ if submit:
             total,
             metode_pembayaran
         )
+
         st.success("✅ Pesanan berhasil ditambahkan")
         st.success("💳 Pembayaran berhasil")
         st.balloons()
-        st.rerun() # Refresh halaman agar tabel data langsung terupdate
 
 
 # =====================================
@@ -275,10 +279,15 @@ else:
 # =====================================
 
 st.subheader("🔍 Cari Pemesan")
-nama_cari = st.text_input("Masukkan nama pemesan yang dicari")
+nama_cari = st.text_input(
+    "Masukkan nama pemesan yang dicari"
+)
 
 if st.button("Cari Pemesan"):
-    hasil = st.session_state.tiket.cari(nama_cari)
+    hasil = st.session_state.tiket.cari(
+        nama_cari
+    )
+
     if hasil:
         st.success("✅ Data ditemukan")
         st.write(f"Nama : {hasil.nama}")
@@ -301,12 +310,19 @@ if st.button("Cari Pemesan"):
 # =====================================
 
 st.subheader("🗑 Hapus Pemesan")
-nama_hapus = st.text_input("Masukkan nama pemesan yang akan dihapus")
+nama_hapus = st.text_input(
+    "Masukkan nama pemesan yang akan dihapus"
+)
 
 if st.button("Hapus Pemesan"):
-    berhasil = st.session_state.tiket.hapus(nama_hapus)
+    berhasil = st.session_state.tiket.hapus(
+        nama_hapus
+    )
+
     if berhasil:
-        st.success(f"✅ Data {nama_hapus} berhasil dihapus")
+        st.success(
+            f"✅ Data {nama_hapus} berhasil dihapus"
+        )
         st.rerun()
     else:
         st.error("❌ Data tidak ditemukan")
@@ -317,10 +333,15 @@ if st.button("Hapus Pemesan"):
 # =====================================
 
 st.subheader("🎫 Cetak Tiket")
-nama_cetak = st.text_input("Masukkan nama pemesan yang akan dicetak")
+nama_cetak = st.text_input(
+    "Masukkan nama pemesan yang akan dicetak"
+)
 
 if st.button("Cetak Tiket"):
-    hasil = st.session_state.tiket.cetak_tiket(nama_cetak)
+    hasil = st.session_state.tiket.cetak_tiket(
+        nama_cetak
+    )
+
     if hasil:
         st.success("✅ Tiket berhasil dicetak")
         st.write("## 🎟 TIKET KONSER JUSTIN BIEBER")
