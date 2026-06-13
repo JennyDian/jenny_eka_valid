@@ -270,21 +270,21 @@ if submit:
         )
 
       st.success("✅ Pesanan berhasil ditambahkan")
-st.success("💳 Pembayaran berhasil")
+      st.success("💳 Pembayaran berhasil")
 
-st.info(f"""
-Nama Pemesan : {nama}
+        st.info(f"""
+        Nama Pemesan : {nama}
 
-Kategori Tiket : {kategori}
+        Kategori Tiket : {kategori}
 
-Jumlah Tiket : {jumlah}
+        Jumlah Tiket : {jumlah}
 
-Total Pembayaran : Rp {total:,}
+        Total Pembayaran : Rp {total:,}
 
-Metode Pembayaran : {metode_pembayaran}
-""")
+        Metode Pembayaran : {metode_pembayaran}
+        """)
 
-st.balloons()
+        st.balloons()
 
 
 # =====================================
