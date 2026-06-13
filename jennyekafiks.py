@@ -269,8 +269,22 @@ if submit:
             metode_pembayaran
         )
 
-        st.success("✅ Pemesan berhasil ditambahkan")
-        st.rerun()
+      st.success("✅ Pesanan berhasil ditambahkan")
+st.success("💳 Pembayaran berhasil")
+
+st.info(f"""
+Nama Pemesan : {nama}
+
+Kategori Tiket : {kategori}
+
+Jumlah Tiket : {jumlah}
+
+Total Pembayaran : Rp {total:,}
+
+Metode Pembayaran : {metode_pembayaran}
+""")
+
+st.balloons()
 
 
 # =====================================
