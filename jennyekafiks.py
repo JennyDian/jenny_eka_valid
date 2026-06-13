@@ -185,6 +185,16 @@ if "total_tampil" not in st.session_state:
 
 
 # =====================================
+# =====================================
+# INITIALIZE STATE UNTUK HARGA TAMPILAN
+# =====================================
+if "harga_tampil" not in st.session_state:
+    st.session_state.harga_tampil = 0
+if "total_tampil" not in st.session_state:
+    st.session_state.total_tampil = 0
+
+
+# =====================================
 # FORM PEMESANAN
 # =====================================
 
@@ -196,28 +206,26 @@ with st.form("form_pemesanan", clear_on_submit=True):
     email = st.text_input("Email")
     no_telp = st.text_input("No. Telepon")
 
-    # PERBAIKAN 1: Format tampilan tanggal lahir (YYYY/MM/DD)
     tanggal_lahir = st.date_input(
         "Tanggal Lahir",
         min_value=date(1900, 1, 1),
         max_value=date(2008, 12, 31),
         value=date(2000, 1, 1),
-        format="YYYY/MM/DD" # Mengatur format tampilan pengisian awal
+        format="YYYY/MM/DD"
     ) 
 
-    # PERBAIKAN 2: Menambahkan pilihan awal "None" pada kategori tiket
     kategori = st.selectbox(
         "Pilih Kategori Tiket",
         ["None", "VIP", "CAT 1", "CAT 2", "CAT 3"]
     )
 
-    # PERBAIKAN 3: Nilai awal jumlah tiket langsung diset maksimal (4)
+    # PERBAIKAN: min_value diset ke 0, value awal diset ke 0
     jumlah = st.number_input(
         "Jumlah Tiket",
-        min_value=1,
+        min_value=0,
         max_value=4,
         step=1,
-        value=4 # Nilai awal diisi maksimal 4 tiket
+        value=0 
     )
 
     metode_pembayaran = st.selectbox(
@@ -232,8 +240,8 @@ with st.form("form_pemesanan", clear_on_submit=True):
     )
 
     # Logika Tampilan Harga & Perhitungan Asli
-    # Jika kategori masih "None" atau nama belum diisi, harga diset ke 0
-    if kategori == "None" or not nama:
+    # Jika kategori masih "None", jumlahnya 0, atau nama kosong -> Harga & Total tetap 0
+    if kategori == "None" or jumlah == 0 or not nama:
         harga_asli = 0
         total_asli = 0
         st.session_state.harga_tampil = 0
@@ -263,6 +271,8 @@ if submit:
         st.warning("Masukkan nomor telepon!")
     elif kategori == "None":
         st.warning("Silakan pilih kategori tiket yang valid!")
+    elif jumlah == 0: # PERBAIKAN: Validasi tambahan agar tidak bisa pesan 0 tiket
+        st.warning("Jumlah tiket minimal harus 1!")
     elif metode_pembayaran == "Pilih Metode Pembayaran":
         st.warning("Silakan pilih metode pembayaran!")
     else:
