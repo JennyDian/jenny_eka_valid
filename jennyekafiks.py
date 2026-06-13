@@ -274,8 +274,7 @@ if submit:
     elif metode_pembayaran == "Pilih Metode Pembayaran":
         st.warning("Silakan pilih metode pembayaran!")
 
-   else:
-
+else:
     harga = harga_tiket[kategori]
     total = harga * jumlah
 
@@ -290,7 +289,7 @@ if submit:
         jumlah,
         total,
         metode_pembayaran
-    )
+    )        
         st.success("✅ Pesanan berhasil ditambahkan")
         st.success("💳 Pembayaran berhasil")
 
