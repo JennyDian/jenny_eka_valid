@@ -175,16 +175,7 @@ CAT 2 : Rp 3.000.000
 CAT 3 : Rp 2.000.000
 """)
 
-# =====================================
-# INITIALIZE STATE UNTUK HARGA TAMPILAN
-# =====================================
-if "harga_tampil" not in st.session_state:
-    st.session_state.harga_tampil = 0
-if "total_tampil" not in st.session_state:
-    st.session_state.total_tampil = 0
 
-
-# =====================================
 # =====================================
 # INITIALIZE STATE UNTUK HARGA TAMPILAN
 # =====================================
@@ -208,10 +199,9 @@ with st.form("form_pemesanan", clear_on_submit=True):
 
     tanggal_lahir = st.date_input(
         "Tanggal Lahir",
-        ["Tanggal Lahir"]
         min_value=date(1900, 1, 1),
         max_value=date(2008, 12, 31),
-        value=date(2000, 1, 1),
+        value=date(YYYY/MM/DD),
         format="YYYY/MM/DD"
     ) 
 
