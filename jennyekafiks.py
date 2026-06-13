@@ -254,6 +254,9 @@ if submit:
     if nama == "" or jumlah is None:
         st.warning("Masukkan data terlebih dahulu!")
 
+    elif metode_pembayaran == "Pilih Metode Pembayaran":
+        st.warning("Silakan pilih metode pembayaran!")
+
     else:
 
         harga = harga_tiket[kategori]
@@ -270,12 +273,21 @@ if submit:
         )
 
         st.success("✅ Pesanan berhasil ditambahkan")
-        st.success(f"💳 Pembayaran {metode_pembayaran} berhasil")
+        st.success("💳 Pembayaran berhasil")
 
-        st.balloons()
+        st.info(f"""
+Nama Pemesan : {nama}
 
-        st.rerun()
-# =====================================
+Kategori Tiket : {kategori}
+
+Jumlah Tiket : {jumlah}
+
+Total Pembayaran : Rp {total:,}
+
+Metode Pembayaran : {metode_pembayaran}
+""")
+
+        st.balloons()# =====================================
 # DAFTAR PEMESAN
 # =====================================
 
