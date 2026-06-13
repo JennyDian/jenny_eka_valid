@@ -201,8 +201,7 @@ with st.form("form_pemesanan", clear_on_submit=True):
         "Tanggal Lahir",
         min_value=date(1900, 1, 1),
         max_value=date(2008, 12, 31),
-        value=date(2000, 1, 1),
-        format="YYYY/MM/DD"
+        value=None,
     ) 
 
     kategori = st.selectbox(
