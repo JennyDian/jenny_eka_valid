@@ -166,10 +166,6 @@ st.write(
 # DAFTAR HARGA
 # =====================================
 
-# =====================================
-# DAFTAR HARGA
-# =====================================
-
 st.subheader("🎫 Daftar Harga Tiket")
 
 st.info("""
@@ -180,8 +176,14 @@ CAT 3 : Rp 2.000.000
 """)
 
 # =====================================
-# FORM PEMESANAN
+# INITIALIZE STATE UNTUK HARGA TAMPILAN
 # =====================================
+# Tambahkan ini sebelum bagian form agar aplikasi mengingat status reset
+if "harga_tampil" not in st.session_state:
+    st.session_state.harga_tampil = 0
+if "total_tampil" not in st.session_state:
+    st.session_state.total_tampil = 0
+
 
 # =====================================
 # FORM PEMESANAN
@@ -226,19 +228,26 @@ with st.form("form_pemesanan", clear_on_submit=True):
         ]
     )
 
-    # --- PERBAIKAN DI SINI ---
+    # Menghitung nilai asli yang sedang dipilih di form secara realtime
+    harga_asli = harga_tiket[kategori]
+    total_asli = harga_asli * jumlah
+
+    # Logika Tampilan: Jika kolom nama diisi, ikuti harga asli. Jika nama kosong, paksa jadi 0.
     if not nama:
-        harga_tampil = 0
-        total_tampil = 0
+        st.session_state.harga_tampil = 0
+        st.session_state.total_tampil = 0
     else:
-        harga_tampil = harga_tiket[kategori]
-        total_tampil = harga_tampil * jumlah
+        st.session_state.harga_tampil = harga_asli
+        st.session_state.total_tampil = total_asli
 
-    st.write(f"### Harga Tiket : Rp {harga_tampil:,}")
-    st.write(f"### Total Harga : Rp {total_tampil:,}")
-    # -------------------------
+    # Menampilkan nilai dari session state
+    st.write(f"### Harga Tiket : Rp {st.session_state.harga_tampil:,}")
+    st.write(f"### Total Harga : Rp {st.session_state.total_tampil:,}")
 
-    submit = st.form_submit_button("Tambah Pemesan")# --- PERBAIKAN: Logika diletakkan di bawah ini agar berjalan HANYA saat tombol diklik ---
+    submit = st.form_submit_button("Tambah Pemesan")
+
+
+# --- LOGIKA TOMBOL SUBMIT ---
 if submit:
     if not nama:
         st.warning("Masukkan nama!")
@@ -251,9 +260,7 @@ if submit:
     elif metode_pembayaran == "Pilih Metode Pembayaran":
         st.warning("Silakan pilih metode pembayaran!")
     else:
-        harga = harga_tiket[kategori]
-        total = harga * jumlah
-
+        # Menambahkan data menggunakan nilai kalkulasi asli sebelum form dikosongkan
         st.session_state.tiket.tambah(
             nama,
             alamat,
@@ -261,17 +268,22 @@ if submit:
             no_telp,
             tanggal_lahir,
             kategori,
-            harga,
+            harga_asli,
             jumlah,
-            total,
+            total_asli,
             metode_pembayaran
         )
+
+        # SELESAI SUBMIT: Paksa nilai tampilan di state langsung kembali ke angka 0
+        st.session_state.harga_tampil = 0
+        st.session_state.total_tampil = 0
 
         st.success("✅ Pesanan berhasil ditambahkan")
         st.success("💳 Pembayaran berhasil")
         st.balloons()
-
-
+        
+        # Memicu rerun agar Streamlit langsung membersihkan layar dan merender angka 0 tersebut
+        st.rerun()
 # =====================================
 # DAFTAR PEMESAN
 # =====================================
