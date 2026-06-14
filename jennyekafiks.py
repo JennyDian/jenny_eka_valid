@@ -159,7 +159,7 @@ harga_tiket = {
 
 
 # =====================================
-# HEADER & INFORMASI BERANDA (TERBARU)
+# HEADER & INFORMASI BERANDA
 # =====================================
 
 st.title("🎤 Tiket Konser Justin Bieber")
@@ -167,7 +167,6 @@ st.write(
     "Sistem Pemesanan Tiket Konser Justin Bieber Menggunakan Linked List"
 )
 
-# Keterangan Informasi Konser di Beranda
 st.markdown("""
 <div style="background-color: #1E1E1E; padding: 15px; border-radius: 8px; border-left: 5px solid #FF4B4B; margin-bottom: 20px;">
     <h4 style="margin-top:0; color: #FF4B4B;">📅 INFORMASI KONSER</h4>
@@ -307,10 +306,27 @@ if submit:
 
 
 # =====================================
-# 2. DAFTAR PEMESAN
+# 2. DAFTAR PEMESAN (SATU-SATUNYA)
 # =====================================
 st.write("---")
 st.subheader("📋 Daftar Pemesan")
 data_pemesan = st.session_state.tiket.tampilkan()
 
-if data
+if data_pemesan:
+    st.table(data_pemesan)
+else:
+    st.info("Belum ada data pemesan.")
+
+
+# =====================================
+# 3. CETAK TIKET
+# =====================================
+st.write("---")
+st.subheader("🎫 Cetak Tiket")
+
+if "info_cetak" not in st.session_state:
+    st.session_state.info_cetak = None
+
+nama_cetak = st.text_input("Masukkan nama pemesan yang akan dicetak")
+
+if st.button("
