@@ -341,7 +341,7 @@ if st.button("Cetak Tiket"):
             "no_telp": hasil.no_telp,
             "tanggal_lahir": hasil.tanggal_lahir,
             "kategori": hasil.kategori,
-            "jumlah": html = hasil.jumlah,
+            "jumlah": hasil.jumlah,
             "pembayaran": hasil.pembayaran,
             "total": hasil.total
         }
