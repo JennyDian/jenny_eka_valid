@@ -297,7 +297,7 @@ if submit:
 
 
 # =====================================
-# 2. DAFTAR PEMESAN (SATU-SATUNYA)
+# 2. DAFTAR PEMESAN (OTOMATIS REFRESH DI SINI)
 # =====================================
 st.write("---")
 st.subheader("📋 Daftar Pemesan")
@@ -337,7 +337,7 @@ if st.button("Cetak Tiket"):
             "total": hasil.total
         }
         st.success("✅ Tiket berhasil dicetak!")
-        st.rerun() # Refresh halaman agar status tabel di atas langsung berubah
+        st.rerun() 
     else:
         st.session_state.info_cetak = None
         st.error("❌ Data tidak ditemukan")
