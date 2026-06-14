@@ -401,8 +401,9 @@ data = st.session_state.tiket.tampilkan()
 if data:
     st.table(data)
 else:
-    st.info("Belum ada data pemesan.")import streamlit as st
-from datetime import date
+    st.info("Belum ada data pemesan.")
+    import streamlit as st
+    from datetime import date
 
 # =====================================
 # NODE
