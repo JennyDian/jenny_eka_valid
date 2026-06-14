@@ -209,7 +209,6 @@ with st.form("form_pemesanan", clear_on_submit=True):
         ["Pilih Kategori Tiket", "VIP", "CAT 1", "CAT 2", "CAT 3"]
     )
 
-    # PERBAIKAN: min_value diset ke 0, value awal diset ke 0
     jumlah = st.number_input(
         "Jumlah Tiket",
         min_value=0,
@@ -229,9 +228,7 @@ with st.form("form_pemesanan", clear_on_submit=True):
         ]
     )
 
-    # Logika Tampilan Harga & Perhitungan Asli
-    # Jika kategori masih "None", jumlahnya 0, atau nama kosong -> Harga & Total tetap 0
-    if kategori == "None" or jumlah == 0 or not nama:
+    if kategori == "Pilih Kategori Tiket" or jumlah == 0 or not nama:
         harga_asli = 0
         total_asli = 0
         st.session_state.harga_tampil = 0
@@ -242,7 +239,6 @@ with st.form("form_pemesanan", clear_on_submit=True):
         st.session_state.harga_tampil = harga_asli
         st.session_state.total_tampil = total_asli
 
-    # Menampilkan nilai harga
     st.write(f"### Harga Tiket : Rp {st.session_state.harga_tampil:,}")
     st.write(f"### Total Harga : Rp {st.session_state.total_tampil:,}")
 
@@ -259,14 +255,13 @@ if submit:
         st.warning("Masukkan email!")
     elif not no_telp:
         st.warning("Masukkan nomor telepon!")
-    elif kategori == "None":
+    elif kategori == "Pilih Kategori Tiket":
         st.warning("Silakan pilih kategori tiket yang valid!")
-    elif jumlah == 0: # PERBAIKAN: Validasi tambahan agar tidak bisa pesan 0 tiket
+    elif jumlah == 0:
         st.warning("Jumlah tiket minimal harus 1!")
     elif metode_pembayaran == "Pilih Metode Pembayaran":
         st.warning("Silakan pilih metode pembayaran!")
     else:
-        # Menambahkan data menggunakan nilai kalkulasi asli
         st.session_state.tiket.tambah(
             nama,
             alamat,
@@ -280,7 +275,6 @@ if submit:
             metode_pembayaran
         )
 
-        # Reset nilai tampilan state kembali ke 0 setelah sukses
         st.session_state.harga_tampil = 0
         st.session_state.total_tampil = 0
 
@@ -289,6 +283,7 @@ if submit:
         st.balloons()
         
         st.rerun()
+
 # =====================================
 # DAFTAR PEMESAN
 # =====================================
@@ -307,14 +302,10 @@ else:
 # =====================================
 
 st.subheader("🔍 Cari Pemesan")
-nama_cari = st.text_input(
-    "Masukkan nama pemesan yang dicari"
-)
+nama_cari = st.text_input("Masukkan nama pemesan yang dicari")
 
 if st.button("Cari Pemesan"):
-    hasil = st.session_state.tiket.cari(
-        nama_cari
-    )
+    hasil = st.session_state.tiket.cari(nama_cari)
 
     if hasil:
         st.success("✅ Data ditemukan")
@@ -338,19 +329,13 @@ if st.button("Cari Pemesan"):
 # =====================================
 
 st.subheader("🗑 Hapus Pemesan")
-nama_hapus = st.text_input(
-    "Masukkan nama pemesan yang akan dihapus"
-)
+nama_hapus = st.text_input("Masukkan nama pemesan yang akan dihapus")
 
 if st.button("Hapus Pemesan"):
-    berhasil = st.session_state.tiket.hapus(
-        nama_hapus
-    )
+    berhasil = st.session_state.tiket.hapus(nama_hapus)
 
     if berhasil:
-        st.success(
-            f"✅ Data {nama_hapus} berhasil dihapus"
-        )
+        st.success(f"✅ Data {nama_hapus} berhasil dihapus")
         st.rerun()
     else:
         st.error("❌ Data tidak ditemukan")
@@ -361,27 +346,47 @@ if st.button("Hapus Pemesan"):
 # =====================================
 
 st.subheader("🎫 Cetak Tiket")
-nama_cetak = st.text_input(
-    "Masukkan nama pemesan yang akan dicetak"
-)
+
+# PERBAIKAN: Menggunakan Session State untuk menyimpan info cetak sementara agar tidak hilang setelah rerun
+if "info_cetak" not in st.session_state:
+    st.session_state.info_cetak = None
+
+nama_cetak = st.text_input("Masukkan nama pemesan yang akan dicetak")
 
 if st.button("Cetak Tiket"):
-    hasil = st.session_state.tiket.cetak_tiket(
-        nama_cetak
-    )
+    hasil = st.session_state.tiket.cetak_tiket(nama_cetak)
 
     if hasil:
-        st.success("✅ Tiket berhasil dicetak")
-        st.write("## 🎟 TIKET KONSER JUSTIN BIEBER")
-        st.write(f"Nama : {hasil.nama}")
-        st.write(f"Alamat : {hasil.alamat}")
-        st.write(f"Email : {hasil.email}")
-        st.write(f"No Telepon : {hasil.no_telp}")
-        st.write(f"Tanggal Lahir : {hasil.tanggal_lahir}")
-        st.write(f"Kategori Tiket : {hasil.kategori}")
-        st.write(f"Jumlah Tiket : {hasil.jumlah}")
-        st.write(f"Metode Pembayaran : {hasil.pembayaran}")
-        st.write(f"Total Harga : Rp {hasil.total:,}")
-        st.success("🎉 Selamat Menikmati Konser Justin Bieber 🎉")
+        # Simpan data node ke session state agar struk tetap tampil setelah page reload
+        st.session_state.info_cetak = {
+            "nama": hasil.nama,
+            "alamat": hasil.alamat,
+            "email": hasil.email,
+            "no_telp": hasil.no_telp,
+            "tanggal_lahir": hasil.tanggal_lahir,
+            "kategori": hasil.kategori,
+            "jumlah": hasil.jumlah,
+            "pembayaran": hasil.pembayaran,
+            "total": hasil.total
+        }
+        st.success("✅ Tiket berhasil dicetak!")
+        st.rerun() # Memicu refresh agar tabel di atas langsung berubah menjadi 'Sudah Dicetak'
     else:
+        st.session_state.info_cetak = None
         st.error("❌ Data tidak ditemukan")
+
+# Tampilkan struk tiket jika data cetak tersedia di session state
+if st.session_state.info_cetak:
+    t = st.session_state.info_cetak
+    st.write("---")
+    st.write("## 🎟 TIKET KONSER JUSTIN BIEBER")
+    st.write(f"**Nama** : {t['nama']}")
+    st.write(f"**Alamat** : {t['alamat']}")
+    st.write(f"**Email** : {t['email']}")
+    st.write(f"**No Telepon** : {t['no_telp']}")
+    st.write(f"**Tanggal Lahir** : {t['tanggal_lahir']}")
+    st.write(f"**Kategori Tiket** : {t['kategori']}")
+    st.write(f"**Jumlah Tiket** : {t['jumlah']}")
+    st.write(f"**Metode Pembayaran** : {t['pembayaran']}")
+    st.write(f"**Total Harga** : Rp {t['total']:,}")
+    st.success("🎉 Selamat Menikmati Konser Justin Bieber 🎉")
