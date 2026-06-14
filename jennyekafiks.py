@@ -281,3 +281,148 @@ if submit:
     elif not alamat:
         st.warning("Masukkan alamat!")
     elif not email:
+        st.warning("Masukkan email!")
+    elif not no_telp:
+        st.warning("Masukkan nomor telepon!")
+    elif kategori == "Pilih Kategori Tiket":
+        st.warning("Silakan pilih kategori tiket yang valid!")
+    elif jumlah == 0:
+        st.warning("Jumlah tiket minimal harus 1!")
+    elif metode_pembayaran == "Pilih Metode Pembayaran":
+        st.warning("Silakan pilih metode pembayaran!")
+    else:
+        acak_angka = random.randint(10000, 99999)
+        kode_tiket_baru = f"JB-2026-{acak_angka}"
+
+        st.session_state.tiket.tambah(
+            nama,
+            alamat,
+            email,
+            no_telp,
+            tanggal_lahir,
+            kategori,
+            harga_asli,
+            jumlah,
+            total_asli,
+            metode_pembayaran,
+            kode_tiket_baru
+        )
+
+        st.session_state.harga_tampil = 0
+        st.session_state.total_tampil = 0
+
+        st.session_state.show_success_popup = True
+        st.session_state.popup_kode_tiket = kode_tiket_baru
+        
+        st.rerun()
+
+
+# =====================================
+# 2. DAFTAR PEMESAN
+# =====================================
+st.write("---")
+st.subheader("📋 Daftar Pemesan")
+data_pemesan = st.session_state.tiket.tampilkan()
+
+if data_pemesan:
+    st.table(data_pemesan)
+else:
+    st.info("Belum ada data pemesan.")
+
+
+# =====================================
+# 3. CETAK TIKET
+# =====================================
+st.write("---")
+st.subheader("🎫 Cetak Tiket")
+
+if "info_cetak" not in st.session_state:
+    st.session_state.info_cetak = None
+
+nama_cetak = st.text_input("Masukkan nama pemesan yang akan dicetak")
+
+if st.button("Cetak Tiket"):
+    hasil = st.session_state.tiket.cetak_tiket(nama_cetak)
+
+    if hasil:
+        st.session_state.info_cetak = {
+            "kode_tiket": hasil.kode_tiket,
+            "nama": hasil.nama,
+            "alamat": hasil.alamat,
+            "email": hasil.email,
+            "no_telp": hasil.no_telp,
+            "tanggal_lahir": hasil.tanggal_lahir,
+            "kategori": hasil.kategori,
+            "jumlah": hasil.jumlah,
+            "pembayaran": hasil.pembayaran,
+            "total": hasil.total
+        }
+        st.success("✅ Tiket berhasil dicetak!")
+        st.rerun() 
+    else:
+        st.session_state.info_cetak = None
+        st.error("❌ Data tidak ditemukan")
+
+if st.session_state.info_cetak:
+    t = st.session_state.info_cetak
+    st.write("---")
+    st.write("## 🎟 TIKET KONSER JUSTIN BIEBER")
+    st.info(f"### KODE TIKET : {t['kode_tiket']}")
+    st.write(f"**Nama Pemesan** : {t['nama']}")
+    st.write(f"**Alamat** : {t['alamat']}")
+    st.write(f"**Email** : {t['email']}")
+    st.write(f"**No Telepon** : {t['no_telp']}")
+    st.write(f"**Tanggal Lahir** : {t['tanggal_lahir']}")
+    st.write(f"**Kategori Tiket** : {t['kategori']}")
+    st.write(f"**Jumlah Tiket** : {t['jumlah']}")
+    st.write(f"**Metode Pembayaran** : {t['pembayaran']}")
+    st.write(f"**Total Harga** : Rp {t['total']:,}")
+    st.success("🎉 Selamat Menikmati Konser Justin Bieber 🎉")
+
+
+# =====================================
+# 4. CARI PEMESAN (BY NO TELEPON)
+# =====================================
+st.write("---")
+st.subheader("🔍 Cari Pemesan (Berdasarkan No. Telepon)")
+telp_cari = st.text_input("Masukkan nomor telepon pemesan yang dicari")
+
+if st.button("Cari Pemesan"):
+    hasil = st.session_state.tiket.cari_by_telp(telp_cari)
+
+    if hasil:
+        st.success("✅ Data ditemukan")
+        st.write(f"Kode Tiket : **{hasil.kode_tiket}**")
+        st.write(f"Nama : {hasil.nama}")
+        st.write(f"Alamat : {hasil.alamat}")
+        st.write(f"Email : {hasil.email}")
+        st.write(f"No Telepon : {hasil.no_telp}")
+        st.write(f"Tanggal Lahir : {hasil.tanggal_lahir}")
+        st.write(f"Kategori : {hasil.kategori}")
+        st.write(f"Harga Tiket : Rp {hasil.harga:,}")
+        st.write(f"Jumlah Tiket : {hasil.jumlah}")
+        st.write(f"Total Harga : Rp {hasil.total:,}")
+        st.write(f"Metode Pembayaran : {hasil.pembayaran}")
+        st.write(f"Status Cetak : {hasil.status_cetak}")
+    else:
+        st.error("❌ Data dengan nomor telepon tersebut tidak ditemukan")
+
+
+# =====================================
+# 5. AJUKAN REFUND TIKET
+# =====================================
+st.write("---")
+st.subheader("💰 Ajukan Refund Tiket")
+kode_refund = st.text_input("Masukkan Kode Tiket yang akan direfund (Contoh: JB-2026-XXXXX)")
+
+if st.button("Ajukan Refund"):
+    if not kode_refund:
+        st.warning("Silakan masukkan kode tiket terlebih dahulu!")
+    else:
+        berhasil = st.session_state.tiket.hapus_by_kode(kode_refund)
+
+        if berhasil:
+            st.success(f"✅ Refund Berhasil! Data dengan Kode Tiket {kode_refund} telah dihapus dari sistem.")
+            st.rerun()
+        else:
+            st.error("❌ Refund Gagal! Kode tiket tidak ditemukan di dalam sistem.")
