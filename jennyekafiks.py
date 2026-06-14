@@ -151,7 +151,7 @@ if "show_success_popup" not in st.session_state:
 if "popup_kode_tiket" not in st.session_state:
     st.session_state.popup_kode_tiket = ""
 
-# State pembantu untuk trigger tampilan gambar Justin setelah refund sukses
+# State pembantu untuk trigger stiker wajah Justin setelah refund sukses
 if "refund_sukses_kode" not in st.session_state:
     st.session_state.refund_sukses_kode = ""
 
@@ -432,14 +432,50 @@ if st.button("Ajukan Refund"):
             st.session_state.refund_sukses_kode = ""
             st.error("❌ Refund Gagal! Kode tiket tidak ditemukan di dalam sistem.")
 
-# --- AREA DOCKING NOTIFIKASI & GAMBAR JUSTIN BIEBER SETELAH REFRESH ---
+# --- AREA STIKER NOTIFIKASI WAJAH JUSTIN BIEBER (MELAYANG DI POJOK KANAN BAWAH) ---
 if st.session_state.refund_sukses_kode:
-    st.success(f"✅ Refund Berhasil! Data dengan Kode Tiket {st.session_state.refund_sukses_kode} telah dihapus dari sistem dan akan diproses dalam waktu 1X24 jam.")
+    # Teks sukses biasa di dalam halaman
+    st.success(f"✅ Refund Berhasil! Data dengan Kode Tiket {st.session_state.refund_sukses_kode} telah dihapus dari sistem.")
     
-    st.image(
-        "https://upload.wikimedia.org/wikipedia/commons/d/da/Justin_Bieber_in_2015.jpg", 
-        caption="See You Next Time! - Justin Bieber", 
-        width=350
+    # Custom HTML & CSS untuk membuat Notifikasi Stiker Wajah Justin Bieber Melayang
+    st.markdown(
+        f"""
+        <div style="
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #1e293b;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 999999;
+            width: 320px;
+            border-left: 5px solid #22c55e;
+            animation: slideIn 0.5s ease-out;
+        ">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/d/da/Justin_Bieber_in_2015.jpg" 
+                 style="width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #22c55e;">
+            <div>
+                <strong style="color: #22c55e; font-size: 14px;">Refund Berhasil!</strong>
+                <p style="margin: 3px 0 0 0; font-size: 12px; color: #cbd5e1;">
+                    Kode {st.session_state.refund_sukses_kode} <strong>akan diproses dalam waktu 1X24 jam.</strong>
+                </p>
+            </div>
+        </div>
+        
+        <style>
+        @keyframes slideIn {{
+            from {{ transform: translateX(120%); opacity: 0; }}
+            to {{ transform: translateX(0); opacity: 1; }}
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
     )
     
+    # Hapus state agar stiker menghilang ketika melakukan aksi pemesanan berikutnya
     st.session_state.refund_sukses_kode = ""
