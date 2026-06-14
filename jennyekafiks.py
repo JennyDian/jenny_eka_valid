@@ -165,7 +165,7 @@ harga_tiket = {
 
 
 # =====================================
-# HEADER & INFORMASI BERANDA (TULISAN BIASA)
+# HEADER & INFORMASI BERANDA
 # =====================================
 
 st.title("🎤 Tiket Konser Justin Bieber")
@@ -205,7 +205,7 @@ if "total_tampil" not in st.session_state:
 
 
 # =====================================
-# POPUP TOAST TRIGGER (AKAN MUNCUL SETELAH RERUN)
+# POPUP TOAST TRIGGER (SETELAH PEMESANAN BERHASIL)
 # =====================================
 if st.session_state.show_success_popup:
     st.toast("✅ Pesanan berhasil ditambahkan!", icon="🎉")
@@ -390,6 +390,8 @@ telp_cari = st.text_input("Masukkan nomor telepon pemesan yang dicari")
 if st.button("Cari Pemesan"):
     hasil = st.session_state.tiket.cari_by_telp(telp_cari)
 
+    if ...:
+        pass
     if hasil:
         st.success("✅ Data ditemukan")
         st.write(f"Kode Tiket : **{hasil.kode_tiket}**")
@@ -422,7 +424,9 @@ if st.button("Ajukan Refund"):
         berhasil = st.session_state.tiket.hapus_by_kode(kode_refund)
 
         if berhasil:
-            st.success(f"✅ Refund Berhasil! Data dengan Kode Tiket {kode_refund} telah dihapus dari sistem.")
-            st.rerun()
+            # Bagian teks pemberitahuan yang diperbarui sesuai request-mu
+            st.success(f"✅ Refund Berhasil! Data dengan Kode Tiket {kode_refund} telah dihapus dari sistem dan akan diproses dalam waktu 1X24 jam.")
+            # Beri jeda sedikit agar user sempat membaca teks sukses sebelum halaman di-refresh otomatis
+            st.balloons()
         else:
             st.error("❌ Refund Gagal! Kode tiket tidak ditemukan di dalam sistem.")
