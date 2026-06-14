@@ -337,16 +337,29 @@ else:
 # =====================================
 # 3. CETAK TIKET
 # =====================================
+# =====================================
+# 3. CETAK TIKET
+# =====================================
 st.write("---")
 st.subheader("🎫 Cetak Tiket")
 
 if "info_cetak" not in st.session_state:
     st.session_state.info_cetak = None
 
-nama_cetak = st.text_input("Masukkan nama pemesan yang akan dicetak")
+# 1. Mengubah label input menjadi Kode Tiket
+kode_cetak = st.text_input("Masukkan Kode Tiket yang akan dicetak (Contoh: JB-2026-XXXXX)")
 
 if st.button("Cetak Tiket"):
-    hasil = st.session_state.tiket.cetak_tiket(nama_cetak)
+    # 2. Mengubah fungsi pencarian ke fungsi pencarian kode tiket
+    # Di sini kita melakukan loop pencarian berdasarkan kode_cetak
+    hasil = None
+    current = st.session_state.tiket.head
+    while current:
+        if current.kode_tiket.strip().lower() == kode_cetak.strip().lower():
+            current.status_cetak = "Sudah Dicetak"
+            hasil = current
+            break
+        current = current.next
 
     if hasil:
         st.session_state.info_cetak = {
@@ -361,11 +374,11 @@ if st.button("Cetak Tiket"):
             "pembayaran": hasil.pembayaran,
             "total": hasil.total
         }
-        st.success("✅ Tiket berhasil dicetak!")
+        st.success("✅ Tiket berhasil ditemukan dan dicetak!")
         st.rerun() 
     else:
         st.session_state.info_cetak = None
-        st.error("❌ Data tidak ditemukan")
+        st.error("❌ Kode tiket tidak ditemukan")
 
 if st.session_state.info_cetak:
     t = st.session_state.info_cetak
@@ -382,8 +395,6 @@ if st.session_state.info_cetak:
     st.write(f"**Metode Pembayaran** : {t['pembayaran']}")
     st.write(f"**Total Harga** : Rp {t['total']:,}")
     st.success("🎉 Selamat Menikmati Konser Justin Bieber 🎉")
-
-
 # =====================================
 # 4. CARI PEMESAN (BY NO TELEPON)
 # =====================================
