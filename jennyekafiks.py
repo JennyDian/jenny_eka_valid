@@ -165,7 +165,7 @@ harga_tiket = {
 
 
 # =====================================
-# HEADER & INFORMASI BERANDA
+# HEADER & INFORMASI BERANDA (TULISAN BIASA)
 # =====================================
 
 st.title("🎤 Tiket Konser Justin Bieber")
@@ -263,4 +263,126 @@ with st.form("form_pemesanan", clear_on_submit=True):
         st.session_state.harga_tampil = 0
         st.session_state.total_tampil = 0
     else:
-        harga_asli = harga_
+        harga_asli = harga_tiket[kategori]
+        total_asli = harga_asli * jumlah
+        st.session_state.harga_tampil = harga_asli
+        st.session_state.total_tampil = total_asli
+
+    st.write(f"### Harga Tiket : Rp {st.session_state.harga_tampil:,}")
+    st.write(f"### Total Harga : Rp {st.session_state.total_tampil:,}")
+
+    submit = st.form_submit_button("Tambah Pemesan")
+
+
+# --- LOGIKA TOMBOL SUBMIT ---
+if submit:
+    if not nama:
+        st.warning("Masukkan nama!")
+    elif not alamat:
+        st.warning("Masukkan alamat!")
+    elif not email:
+        st.warning("Masukkan email!")
+    elif not no_telp:
+        st.warning("Masukkan nomor telepon!")
+    elif kategori == "Pilih Kategori Tiket":
+        st.warning("Silakan pilih kategori tiket yang valid!")
+    elif jumlah == 0:
+        st.warning("Jumlah tiket minimal harus 1!")
+    elif metode_pembayaran == "Pilih Metode Pembayaran":
+        st.warning("Silakan pilih metode pembayaran!")
+    else:
+        acak_angka = random.randint(10000, 99999)
+        kode_tiket_baru = f"JB-2026-{acak_angka}"
+
+        st.session_state.tiket.tambah(
+            nama,
+            alamat,
+            email,
+            no_telp,
+            tanggal_lahir,
+            kategori,
+            harga_asli,
+            jumlah,
+            total_asli,
+            metode_pembayaran,
+            kode_tiket_baru
+        )
+
+        st.session_state.harga_tampil = 0
+        st.session_state.total_tampil = 0
+
+        st.session_state.show_success_popup = True
+        st.session_state.popup_kode_tiket = kode_tiket_baru
+        
+        st.rerun()
+
+
+# =====================================
+# 2. DAFTAR PEMESAN
+# =====================================
+st.write("---")
+st.subheader("📋 Daftar Pemesan")
+data_pemesan = st.session_state.tiket.tampilkan()
+
+if data_pemesan:
+    st.table(data_pemesan)
+else:
+    st.info("Belum ada data pemesan.")
+
+
+# =====================================
+# 3. CETAK TIKET
+# =====================================
+st.write("---")
+st.subheader("🎫 Cetak Tiket")
+
+if "info_cetak" not in st.session_state:
+    st.session_state.info_cetak = None
+
+nama_cetak = st.text_input("Masukkan nama pemesan yang akan dicetak")
+
+if st.button("Cetak Tiket"):
+    hasil = st.session_state.tiket.cetak_tiket(nama_cetak)
+
+    if hasil:
+        st.session_state.info_cetak = {
+            "kode_tiket": hasil.kode_tiket,
+            "nama": hasil.nama,
+            "alamat": hasil.alamat,
+            "email": hasil.email,
+            "no_telp": hasil.no_telp,
+            "tanggal_lahir": hasil.tanggal_lahir,
+            "kategori": hasil.kategori,
+            "jumlah": hasil.jumlah,
+            "pembayaran": hasil.pembayaran,
+            "total": hasil.total
+        }
+        st.success("✅ Tiket berhasil dicetak!")
+        st.rerun() 
+    else:
+        st.session_state.info_cetak = None
+        st.error("❌ Data tidak ditemukan")
+
+if st.session_state.info_cetak:
+    t = st.session_state.info_cetak
+    st.write("---")
+    st.write("## 🎟 TIKET KONSER JUSTIN BIEBER")
+    st.info(f"### KODE TIKET : {t['kode_tiket']}")
+    st.write(f"**Nama Pemesan** : {t['nama']}")
+    st.write(f"**Alamat** : {t['alamat']}")
+    st.write(f"**Email** : {t['email']}")
+    st.write(f"**No Telepon** : {t['no_telp']}")
+    st.write(f"**Tanggal Lahir** : {t['tanggal_lahir']}")
+    st.write(f"**Kategori Tiket** : {t['kategori']}")
+    st.write(f"**Jumlah Tiket** : {t['jumlah']}")
+    st.write(f"**Metode Pembayaran** : {t['pembayaran']}")
+    st.write(f"**Total Harga** : Rp {t['total']:,}")
+    st.success("🎉 Selamat Menikmati Konser Justin Bieber 🎉")
+
+
+# =====================================
+# 4. CARI PEMESAN (BY NO TELEPON)
+# =====================================
+st.write("---")
+st.subheader("🔍 Cari Pemesan (Berdasarkan No. Telepon)")
+telp_cari = st.text_input("Masukkan nomor telepon pemesan
