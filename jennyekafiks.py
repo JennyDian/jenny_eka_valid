@@ -145,11 +145,15 @@ class LinkedList:
 if "tiket" not in st.session_state:
     st.session_state.tiket = LinkedList()
 
-# State pembantu untuk trigger popup setelah rerun
+# State pembantu untuk trigger popup setelah pemesanan
 if "show_success_popup" not in st.session_state:
     st.session_state.show_success_popup = False
 if "popup_kode_tiket" not in st.session_state:
     st.session_state.popup_kode_tiket = ""
+
+# State pembantu untuk trigger tampilan gambar Justin setelah refund sukses
+if "refund_sukses_kode" not in st.session_state:
+    st.session_state.refund_sukses_kode = ""
 
 
 # =====================================
@@ -354,7 +358,7 @@ if st.button("Cetak Tiket"):
             "tanggal_lahir": hasil.tanggal_lahir,
             "kategori": hasil.kategori,
             "jumlah": hasil.jumlah,
-            "pembayaran": hasil.pembayaran,
+            "pembayaran": musician_payment := hasil.pembayaran,
             "total": hasil.total
         }
         st.success("✅ Tiket berhasil dicetak!")
@@ -390,8 +394,6 @@ telp_cari = st.text_input("Masukkan nomor telepon pemesan yang dicari")
 if st.button("Cari Pemesan"):
     hasil = st.session_state.tiket.cari_by_telp(telp_cari)
 
-    if ...:
-        pass
     if hasil:
         st.success("✅ Data ditemukan")
         st.write(f"Kode Tiket : **{hasil.kode_tiket}**")
@@ -424,9 +426,24 @@ if st.button("Ajukan Refund"):
         berhasil = st.session_state.tiket.hapus_by_kode(kode_refund)
 
         if berhasil:
-            # Bagian teks pemberitahuan yang diperbarui sesuai request-mu
-            st.success(f"✅ Refund Berhasil! Data dengan Kode Tiket {kode_refund} telah dihapus dari sistem dan akan diproses dalam waktu 1X24 jam.")
-            # Beri jeda sedikit agar user sempat membaca teks sukses sebelum halaman di-refresh otomatis
-            st.balloons()
+            # Simpan kode tiket ke state agar setelah rerun, sistem tahu refund mana yang sukses
+            st.session_state.refund_sukses_kode = kode_refund
+            st.rerun()
         else:
+            st.session_state.refund_sukses_kode = ""
             st.error("❌ Refund Gagal! Kode tiket tidak ditemukan di dalam sistem.")
+
+# --- AREA DOCKING NOTIFIKASI & GAMBAR JUSTIN BIEBER SETELAH REFRESH ---
+if st.session_state.refund_sukses_kode:
+    # Tampilkan pesan sukses 1x24 jam
+    st.success(f"✅ Refund Berhasil! Data dengan Kode Tiket {st.session_state.refund_sukses_kode} telah dihapus dari sistem dan akan diproses dalam waktu 1X24 jam.")
+    
+    # Tampilkan gambar Justin Bieber dari URL publik resmi yang stabil
+    st.image(
+        "https://upload.wikimedia.org/wikipedia/commons/d/da/Justin_Bieber_in_2015.jpg", 
+        caption="See You Next Time! - Justin Bieber", 
+        width=350
+    )
+    
+    # Reset kembali statenya supaya gambar tidak terus-terusan mengunci halaman saat form lain dipakai
+    st.session_state.refund_sukses_kode = ""
