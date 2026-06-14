@@ -358,7 +358,7 @@ if st.button("Cetak Tiket"):
             "tanggal_lahir": hasil.tanggal_lahir,
             "kategori": hasil.kategori,
             "jumlah": hasil.jumlah,
-            "pembayaran": musician_payment := hasil.pembayaran,
+            "pembayaran": hasil.pembayaran,
             "total": hasil.total
         }
         st.success("✅ Tiket berhasil dicetak!")
@@ -426,7 +426,6 @@ if st.button("Ajukan Refund"):
         berhasil = st.session_state.tiket.hapus_by_kode(kode_refund)
 
         if berhasil:
-            # Simpan kode tiket ke state agar setelah rerun, sistem tahu refund mana yang sukses
             st.session_state.refund_sukses_kode = kode_refund
             st.rerun()
         else:
@@ -435,15 +434,12 @@ if st.button("Ajukan Refund"):
 
 # --- AREA DOCKING NOTIFIKASI & GAMBAR JUSTIN BIEBER SETELAH REFRESH ---
 if st.session_state.refund_sukses_kode:
-    # Tampilkan pesan sukses 1x24 jam
     st.success(f"✅ Refund Berhasil! Data dengan Kode Tiket {st.session_state.refund_sukses_kode} telah dihapus dari sistem dan akan diproses dalam waktu 1X24 jam.")
     
-    # Tampilkan gambar Justin Bieber dari URL publik resmi yang stabil
     st.image(
         "https://upload.wikimedia.org/wikipedia/commons/d/da/Justin_Bieber_in_2015.jpg", 
         caption="See You Next Time! - Justin Bieber", 
         width=350
     )
     
-    # Reset kembali statenya supaya gambar tidak terus-terusan mengunci halaman saat form lain dipakai
     st.session_state.refund_sukses_kode = ""
