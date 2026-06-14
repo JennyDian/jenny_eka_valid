@@ -747,7 +747,7 @@ if st.button("Cetak Tiket"):
             "alamat": hasil.alamat,
             "email": hasil.email,
             "no_telp": hasil.no_telp,
-            "tanggal_lahir": Cyber = hasil.tanggal_lahir,
+            "tanggal_lahir": hasil.tanggal_lahir,
             "kategori": hasil.kategori,
             "jumlah": hasil.jumlah,
             "pembayaran": hasil.pembayaran,
