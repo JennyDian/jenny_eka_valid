@@ -297,14 +297,14 @@ if submit:
 
 
 # =====================================
-# 2. DAFTAR PEMESAN (PERTAMA)
+# 2. DAFTAR PEMESAN (SATU-SATUNYA)
 # =====================================
 st.write("---")
 st.subheader("📋 Daftar Pemesan")
-data_pemesan_1 = st.session_state.tiket.tampilkan()
+data_pemesan = st.session_state.tiket.tampilkan()
 
-if data_pemesan_1:
-    st.table(data_pemesan_1)
+if data_pemesan:
+    st.table(data_pemesan)
 else:
     st.info("Belum ada data pemesan.")
 
@@ -337,7 +337,7 @@ if st.button("Cetak Tiket"):
             "total": hasil.total
         }
         st.success("✅ Tiket berhasil dicetak!")
-        st.rerun()
+        st.rerun() # Refresh halaman agar status tabel di atas langsung berubah
     else:
         st.session_state.info_cetak = None
         st.error("❌ Data tidak ditemukan")
@@ -360,20 +360,7 @@ if st.session_state.info_cetak:
 
 
 # =====================================
-# 4. DAFTAR PEMESAN (KEDUA - SETELAH CETAK)
-# =====================================
-st.write("---")
-st.subheader("📋 Daftar Pemesan (Updated)")
-data_pemesan_2 = st.session_state.tiket.tampilkan()
-
-if data_pemesan_2:
-    st.table(data_pemesan_2)
-else:
-    st.info("Belum ada data pemesan.")
-
-
-# =====================================
-# 5. CARI PEMESAN (BY NO TELEPON)
+# 4. CARI PEMESAN (BY NO TELEPON)
 # =====================================
 st.write("---")
 st.subheader("🔍 Cari Pemesan (Berdasarkan No. Telepon)")
@@ -401,7 +388,7 @@ if st.button("Cari Pemesan"):
 
 
 # =====================================
-# 6. HAPUS PEMESAN
+# 5. HAPUS PEMESAN
 # =====================================
 st.write("---")
 st.subheader("🗑 Hapus Pemesan")
