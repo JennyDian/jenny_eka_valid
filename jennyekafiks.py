@@ -329,4 +329,85 @@ if "info_cetak" not in st.session_state:
 
 nama_cetak = st.text_input("Masukkan nama pemesan yang akan dicetak")
 
-if st.button("
+if st.button("Cetak Tiket"):
+    hasil = st.session_state.tiket.cetak_tiket(nama_cetak)
+
+    if hasil:
+        st.session_state.info_cetak = {
+            "kode_tiket": hasil.kode_tiket,
+            "nama": hasil.nama,
+            "alamat": hasil.alamat,
+            "email": hasil.email,
+            "no_telp": hasil.no_telp,
+            "tanggal_lahir": hasil.tanggal_lahir,
+            "kategori": hasil.kategori,
+            "jumlah": html = hasil.jumlah,
+            "pembayaran": hasil.pembayaran,
+            "total": hasil.total
+        }
+        st.success("✅ Tiket berhasil dicetak!")
+        st.rerun() 
+    else:
+        st.session_state.info_cetak = None
+        st.error("❌ Data tidak ditemukan")
+
+if st.session_state.info_cetak:
+    t = st.session_state.info_cetak
+    st.write("---")
+    st.write("## 🎟 TIKET KONSER JUSTIN BIEBER")
+    st.info(f"### KODE TIKET : {t['kode_tiket']}")
+    st.write(f"**Nama Pemesan** : {t['nama']}")
+    st.write(f"**Alamat** : {t['alamat']}")
+    st.write(f"**Email** : {t['email']}")
+    st.write(f"**No Telepon** : {t['no_telp']}")
+    st.write(f"**Tanggal Lahir** : {t['tanggal_lahir']}")
+    st.write(f"**Kategori Tiket** : {t['kategori']}")
+    st.write(f"**Jumlah Tiket** : {t['jumlah']}")
+    st.write(f"**Metode Pembayaran** : {t['pembayaran']}")
+    st.write(f"**Total Harga** : Rp {t['total']:,}")
+    st.success("🎉 Selamat Menikmati Konser Justin Bieber 🎉")
+
+
+# =====================================
+# 4. CARI PEMESAN (BY NO TELEPON)
+# =====================================
+st.write("---")
+st.subheader("🔍 Cari Pemesan (Berdasarkan No. Telepon)")
+telp_cari = st.text_input("Masukkan nomor telepon pemesan yang dicari")
+
+if st.button("Cari Pemesan"):
+    hasil = st.session_state.tiket.cari_by_telp(telp_cari)
+
+    if hasil:
+        st.success("✅ Data ditemukan")
+        st.write(f"Kode Tiket : **{hasil.kode_tiket}**")
+        st.write(f"Nama : {hasil.nama}")
+        st.write(f"Alamat : {hasil.alamat}")
+        st.write(f"Email : {hasil.email}")
+        st.write(f"No Telepon : {hasil.no_telp}")
+        st.write(f"Tanggal Lahir : {hasil.tanggal_lahir}")
+        st.write(f"Kategori : {hasil.kategori}")
+        st.write(f"Harga Tiket : Rp {hasil.harga:,}")
+        st.write(f"Jumlah Tiket : {hasil.jumlah}")
+        st.write(f"Total Harga : Rp {hasil.total:,}")
+        st.write(f"Metode Pembayaran : {hasil.pembayaran}")
+        st.write(f"Status Cetak : {hasil.status_cetak}")
+    else:
+        st.error("❌ Data dengan nomor telepon tersebut tidak ditemukan")
+
+
+# =====================================
+# 5. HAPUS PEMESAN
+# =====================================
+st.write("---")
+st.subheader("🗑 Hapus Pemesan")
+nama_hapus = st.text_input("Masukkan nama pemesan yang akan dihapus")
+
+if st.button("Hapus Pemesan"):
+    berhasil = st.session_state.tiket.hapus(nama_hapus)
+
+    if berhasil:
+        st.success(f"✅ Data {nama_hapus} berhasil dihapus")
+        st.rerun()
+    else:
+        st.error("❌ Data tidak ditemukan")
