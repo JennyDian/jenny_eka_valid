@@ -159,7 +159,7 @@ harga_tiket = {
 
 
 # =====================================
-# HEADER & INFORMASI BERANDA
+# HEADER & INFORMASI BERANDA (TULISAN BIASA)
 # =====================================
 
 st.title("🎤 Tiket Konser Justin Bieber")
@@ -167,14 +167,13 @@ st.write(
     "Sistem Pemesanan Tiket Konser Justin Bieber Menggunakan Linked List"
 )
 
+# Keterangan Informasi Konser menggunakan tulisan biasa (Markdown)
+st.subheader("📅 Informasi Jadwal & Tempat")
 st.markdown("""
-<div style="background-color: #1E1E1E; padding: 15px; border-radius: 8px; border-left: 5px solid #FF4B4B; margin-bottom: 20px;">
-    <h4 style="margin-top:0; color: #FF4B4B;">📅 INFORMASI KONSER</h4>
-    <p style="margin-bottom: 5px;"><strong>Tanggal Pelaksanaan:</strong> 20 Desember 2026</p>
-    <p style="margin-bottom: 5px;"><strong>Open Gate:</strong> 15.00 WIB</p>
-    <p style="margin-bottom: 0;"><strong>Venue / Tempat:</strong> Jakarta International Stadium (JIS)</p>
-</div>
-""", unsafe_html=True)
+* **Tanggal Pelaksanaan:** 20 Desember 2026
+* **Open Gate:** 15.00 WIB
+* **Venue / Tempat:** Jakarta International Stadium (JIS)
+""")
 
 
 # =====================================
@@ -306,7 +305,7 @@ if submit:
 
 
 # =====================================
-# 2. DAFTAR PEMESAN (SATU-SATUNYA)
+# 2. DAFTAR PEMESAN
 # =====================================
 st.write("---")
 st.subheader("📋 Daftar Pemesan")
